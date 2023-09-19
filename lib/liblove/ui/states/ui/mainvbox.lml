@@ -1,0 +1,64 @@
+<vbox xmlns:c="ui/components"
+	onInitialize="onInitialize" onUpdate="onUpdate"
+	onMouseOver="onMouseOver" onMouseOut="onMouseOut"
+	verticalGap="5" x="100" y="100"
+	paddingTop="5" paddingLeft="5">
+    <script>
+        <![CDATA[
+			require("lib/essential")
+			require("lib/graphics/color")
+			
+            function self:onInitialize (event)
+				local width, height = dimensions()
+				self.width = width - (self:getX() * 2)
+				self.height = height - (self:getY() * 2)
+				self._vel = Vector2:new(10, 0)
+				self._up = Vector2:new(20, -20)
+				self:onMouseOut()
+            end
+			
+			function self:onUpdate (event)
+				local dt = event.params.dt
+				self._vel.x = self._vel.x + (self._up.x * dt)
+				self._vel.y = self._vel.y + (self._up.y * dt)
+				
+				if self._vel.x < -10 then
+					self._up.x = math.abs(self._up.x)
+				end
+				
+				if self._vel.x > 10 then
+					self._up.x = math.abs(self._up.x) * -1
+				end
+				
+				if self._vel.y < -10 then
+					self._up.y = math.abs(self._up.y)
+				end
+				
+				if self._vel.y > 10 then
+					self._up.y = math.abs(self._up.y) * -1
+				end
+				
+				self.x = self:getX() + (self._vel.x * dt)
+				self.y = self:getY() + (self._vel.y * dt)
+			end
+			
+			function self:onMouseOver (event)
+				self.color = Color.fromString("#bb737a")
+				self.mainlabel.color = Color.fromString("#ccba82")
+				self.label2.color = Color.fromString("#89ccf5")
+				self.label3.color = self.label2.color:copy()
+			end
+			
+			function self:onMouseOut (event)
+				self.color = Color.fromString("#123abc")
+				self.mainlabel.color = Color.fromString("#adf276")
+				self.label2.color = Color.WHITE:copy()
+				self.label3.color = self.label2.color:copy()
+			end
+        ]]>
+    </script>
+    <label id="mainlabel" value="My List" fontSize="18" />
+	<c:hellolabel id="label2" />
+	<c:hellolabel id="label3" value="Goodbye" />
+    <list id="mylist" fontSize="12" itemRenderer="ui/list/itemRenderer.lml" />
+</vbox>
